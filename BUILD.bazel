@@ -71,6 +71,8 @@ public_headers = public_headers_no_gen + [
     "include/ignition/common.hh",
 ]
 
+# TODO(srmainwaring): remove dependency on @uuid for macOS
+# https://github.com/ignitionrobotics/ign-cmake/issues/127
 cc_library(
     name = "ign_common",
     srcs = sources + private_headers,
@@ -78,15 +80,16 @@ cc_library(
     includes = ["include"],
     linkopts = ["-ldl"],
     deps = [
-        "@uuid",
+        # "@uuid",
         IGNITION_ROOT + "ign_math",
     ],
 )
 
+# TODO(srmainwaring): remove -soname option for macOS
 cc_binary(
     name = "libignition-common4.so",
     includes = ["include"],
-    linkopts = ["-Wl,-soname,libignition-common4.so"],
+    linkopts = ["-Wl"],
     linkshared = True,
     deps = [":ign_common"],
 )
