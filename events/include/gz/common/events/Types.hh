@@ -30,6 +30,12 @@ namespace gz
     /// \def ConnectionPtr
     /// \brief Shared pointer to a Connection object
     using ConnectionPtr = std::shared_ptr<Connection>;
+
+    /// \brief A unique identifier for an event type.
+    using EventTypeId = uint64_t;
+
+    /// \brief Id that indicates an invalid event type.
+    static const EventTypeId kEventTypeIdInvalid = UINT64_MAX;
   }
 }
 

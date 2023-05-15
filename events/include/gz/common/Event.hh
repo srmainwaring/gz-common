@@ -55,6 +55,12 @@ namespace gz
       /// \param[in] _sig True if the event has been signaled.
       public: void SetSignaled(bool _sig);
 
+      /// \brief Returns the unique ID for the events's type.
+      /// The ID is derived from the name that is manually chosen during the
+      /// Factory registration and is guaranteed to be the same across compilers
+      /// and runs.
+      public: virtual EventTypeId TypeId() const = 0;
+
       /// \brief True if the event has been signaled.
       private: bool signaled;
     };
@@ -120,7 +126,10 @@ namespace gz
 
       /// \brief Disconnect a callback to this event.
       /// \param[in] _id The id of the connection to disconnect.
-      public: virtual void Disconnect(int _id);
+      public: virtual void Disconnect(int _id) override;
+
+      // Documentation inherited
+      public: virtual EventTypeId TypeId() const override;
 
       /// \brief Get the number of connections.
       /// \return Number of connection to this Event.
@@ -146,6 +155,12 @@ namespace gz
             iter.second->callback(std::forward<Args>(args)...);
         }
       }
+
+      /// \brief Unique ID for this event type.
+      public: inline static EventTypeId typeId{0};
+
+      /// \brief Unique name for this component type.
+      public: inline static const char* typeName{nullptr};
 
       /// \internal
       /// \brief Removes queued connections.
@@ -262,6 +277,12 @@ namespace gz
         it->second->callback = nullptr;
         this->connectionsToRemove.push_back(it);
       }
+    }
+
+    template<typename T, typename N>
+    EventTypeId EventT<T, N>::TypeId() const
+    {
+      return typeId;
     }
 
     /////////////////////////////////////////////
